@@ -1,1 +1,61 @@
-responsive
+/* Homer stylesheet */
+
+@media screen 
+	and (max-width: 600px) {
+		.homer {
+			width: 312.5px; height:312.5px;
+			background: url(homer.jpg) top left;
+		}
+}
+
+@media screen 
+	and (min-width: 600px)
+	and (max-width: 800px) {
+		.homer {
+			width: 312.5px; height:312.5px;
+			background: url(homer.jpg) top right;
+		}
+	}
+
+@media screen 
+	and (min-width: 800px)
+	and (max-width: 1000px) {
+		.homer {
+			width: 312.5px; height:312.5px;
+			background: url(homer.jpg) bottom left;
+		}
+}
+@media screen 
+	and (min-width: 1000px)
+	and (max-width: 1200px) {
+		.homer {
+			width: 312.5px; height:312.5px;
+			background: url(homer.jpg) bottom right;
+		}
+	}
+
+@media screen 
+	and (min-width: 1200px)
+	and (max-width: 1400px) {
+		.homer {
+			width: 312.5px; height:312.5px;
+			background: url(homer.jpg) bottom left;
+		}
+	}
+
+@media screen 
+	and (min-width: 1400px)
+	and (max-width: 1600px) {
+		.homer {
+			width: 312.5px; height:312.5px;
+			background: url(homer.jpg) top right;
+		}
+}
+
+@media screen 
+	and (min-width: 1600px) {
+		.homer {
+			width: 312.5px; height:312.5px;
+			background: url(homer.jpg) top left;
+		}
+	}
