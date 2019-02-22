@@ -14,7 +14,24 @@
 <div id="lyrics"></div>
 
 <script>
-	// Complete this section and create a CSS file named style.css
+	// var v = document.getElementsById("video");
+	// v.addEventListener("timeupdate", subs())
+	
+	// function subs() {
+	// 	if (v.currentTime >= 5.0){
+	// 		document.getElementById("lyrics").innerHTML = "Have a nice day!";
+	// 	}
+	// }
+	var v = document.getElementsByTagName("video")[0];
+	v.addEventListener("timeupdate", function() { subs(); }, true);
+	v.currentTime = 0.0;
+
+	function subs() {
+	if (v.currentTime >= 5.0){
+	 		document.getElementById("lyrics").innerHTML = "Have a nice day!";
+	 	}
+	 }
+
 </script>
 </body>
 </html>
