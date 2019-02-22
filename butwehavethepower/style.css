@@ -1,1 +1,28 @@
 /* Style sheet */
+
+body {
+	font-family: Arial, Helvetica, sans-serif;
+	background-color: #D5FCFE; /* very light blue */
+}
+
+
+#title {
+	font-family: Blippo, fantasy;
+	font-size: 50px;
+	font-weight: bold;
+	text-align: center;
+}
+
+#lyrics {
+	font-family: Blippo, fantasy;
+	font-size: 30px;
+	text-align: center;
+	text-decoration-color: #F9F934; /* yellow */
+	margin-top: 4%;
+}
+
+#butwehavethepower {
+	display: block;
+	margin: 0 auto;
+}
+
