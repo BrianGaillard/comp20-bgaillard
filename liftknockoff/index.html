@@ -17,6 +17,7 @@
 	var marker;
 	var infoWindow;
 	var map;
+	var image = 'thinking_emoji.png';
 
 	function initMap() {
 		map = new google.maps.Map(document.getElementById("map"), {
@@ -41,7 +42,8 @@
 		map.panTo(me);
 		marker = new google.maps.Marker({
 			position: me,
-			title: "You are here"
+			title: "You are here",
+			icon: image
 		});
 		marker.setMap(map);
 
@@ -63,13 +65,56 @@
 		request.onreadystatechange = function(){
 			if (request.readyState == 4 && request.status == 200) {
 				data = JSON.parse(request.responseText);
+				console.log(data);
+				parsing(data);
 			}
 		}
 
 		request.send("username=m4Phs9fb&lat="+myLat+"&lng="+myLng);
 	}
 
-
+	function parsing(data){
+		var lat;
+		var lng;
+		console.log(data.passengers[0].username)
+		if(data.passengers){
+			console.log(data.passengers[1].username)
+			console.log(data.passengers.length);
+			for (count = 0; count < data.passengers.length; count++) {
+				if (data.passengers[count].username == "WEINERMOBILE"){
+					lat = data.passengers[count].lat;
+					lng = data.passengers[count].lng;
+					person = new google.maps.LatLng(lat,lng);
+					marker = new google.maps.Marker({
+					position: person,
+					title: data.passengers[count].username,
+					icon: image = 'https://tuftsdev.github.io/WebProgramming/assignments/weinermobile.png'
+				});
+				marker.setMap(map);
+				}
+				lat = data.passengers[count].lat;
+				lng = data.passengers[count].lng;
+				person = new google.maps.LatLng(lat,lng);
+				marker = new google.maps.Marker({
+				position: person,
+				title: data.passengers[count].username,
+				icon: image = 'thinking_emoji.png'
+				});
+				marker.setMap(map);
+			}
+		}
+		if(data.drivers){
+			for (count = 0; count < data.length; count++) {
+				//person = new google.maps.LatLng(lat,lng);
+				marker = new google.maps.Marker({
+				position: data[count].lat + data[count].lng,
+				title: data[count].username,
+				icon: image
+				});
+				marker.setMap(map);
+			}
+	}
+}
 
 
 	</script>
