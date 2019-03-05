@@ -17,6 +17,8 @@
 	var marker;
 	var infoWindow;
 	var map;
+	
+	var short_name;
 	var image = 'thinking_emoji.png';
 
 	function initMap() {
@@ -38,19 +40,20 @@
 }
 
 	function renderMap() {
+		var shortest;
 		me = new google.maps.LatLng(myLat,myLng);
 		map.panTo(me);
-		marker = new google.maps.Marker({
+		mymarker = new google.maps.Marker({
 			position: me,
-			title: "You are here",
+			title: "The closest person is "+shortest+" miles away!",
 			icon: image
 		});
-		marker.setMap(map);
+		mymarker.setMap(map);
 
 		infoWindow = new google.maps.InfoWindow();
-		google.maps.event.addListener(marker,'click',function() {
-			infoWindow.setContent(marker.title);
-			infoWindow.open(map, marker);
+		google.maps.event.addListener(mymarker,'click',function() {
+			infoWindow.setContent(this.title);
+			infoWindow.open(map, this);
 		});
 		getData();
 	}
@@ -73,7 +76,7 @@
 		request.send("username=m4Phs9fb&lat="+myLat+"&lng="+myLng);
 	}
 
-	function parsing(data){
+	function parsing(data) {
 		var lat;
 		var lng;
 		
@@ -86,22 +89,36 @@
 					person = new google.maps.LatLng(lat,lng);
 					marker = new google.maps.Marker({
 					position: person,
-					title: data.passengers[count].username,
+					title: "It's the "+data.passengers[count].username+"!! It is at latitude "+lat+" and longitude "+lng+"!",
 					icon: image = 'https://tuftsdev.github.io/WebProgramming/assignments/weinermobile.png'
 				});
 				marker.setMap(map);
+
+				infoWindow = new google.maps.InfoWindow();
+				google.maps.event.addListener(marker,'click',function() {
+				infoWindow.setContent(this.title);
+				infoWindow.open(map, this);
+				});
+
 				} else {
 				lat = data.passengers[count].lat;
 				lng = data.passengers[count].lng;
 				person = new google.maps.LatLng(lat,lng);
 				marker = new google.maps.Marker({
 				position: person,
-				title: data.passengers[count].username,
+				title: "Passenger "+data.passengers[count].username+" is at latitude "+lat+" and longitude "+lng+"!",
 				icon: image = 'thinking_emoji.png'
 				});
 				marker.setMap(map);
+
+				infoWindow = new google.maps.InfoWindow();
+				google.maps.event.addListener(marker,'click',function() {
+				infoWindow.setContent(this.title);
+				infoWindow.open(map, this);
+				});
 				}	
 			}
+			shortestDistance(data);
 		}
 		if(data.drivers){
 			console.log(data.drivers.length);
@@ -112,28 +129,94 @@
 					person = new google.maps.LatLng(lat,lng);
 					marker = new google.maps.Marker({
 					position: person,
-					title: data.drivers[count].username,
+					title: "It's the "+data.passengers[count].username+"!! It is at latitude "+lat+" and longitude "+lng+"!",
 					icon: image = 'https://tuftsdev.github.io/WebProgramming/assignments/weinermobile.png'
 				});
 				marker.setMap(map);
+
+				infoWindow = new google.maps.InfoWindow();
+				google.maps.event.addListener(marker,'click',function() {
+				infoWindow.setContent(this.title);
+				infoWindow.open(map, this);
+				});
+
 				} else {
 				lat = data.drivers[count].lat;
 				lng = data.drivers[count].lng;
 				person = new google.maps.LatLng(lat,lng);
 				marker = new google.maps.Marker({
 				position: person,
-				title: data.drivers[count].username,
+				title: "Driver "+data.passengers[count].username+" is at latitude "+lat+" and longitude "+lng+"!",
 				icon: image = 'https://tuftsdev.github.io/WebProgramming/assignments/car.png'
 				});
 				marker.setMap(map);
+
+				infoWindow = new google.maps.InfoWindow();
+				google.maps.event.addListener(marker,'click',function() {
+				infoWindow.setContent(this.title);
+				infoWindow.open(map, this);
+				});
 				}	
 			}
 		}
+
+	function shortestDistance(data) {
+		var lati;
+		var long;
+		var locations;
+		shortest = 19996000;
+		if (data.passengers){
+			locations = Array(data.passengers.length);
+			for (count = 0; count < data.passengers.length; count++) {
+						lati = data.passengers[count].lat;
+						long = data.passengers[count].lng;
+						me = new google.maps.LatLng(myLat,myLng);
+						console.log("me"+me);
+						other = new google.maps.LatLng(lati,long);
+						console.log("other"+other);
+
+						value = google.maps.geometry.spherical.computeDistanceBetween(me, other);
+						locations[count] = value;
+						console.log("value"+value);
+			}
+
+			for (i = 1; i < data.passengers.length; i++) {
+				if (locations[i] < shortest) {
+					shortest = locations[i];
+				}
+			}
+			shortest = shortest * 0.000621371;
+
+		
+			marker = new google.maps.Marker({
+			position: me,
+			title: "The closest person is "+shortest+" miles away!",
+			icon: image
+			});
+
+			marker.setMap(map);
+
+			infoWindow = new google.maps.InfoWindow();
+			google.maps.event.addListener(marker,'click',function() {
+			infoWindow.setContent(this.title);
+			infoWindow.open(map, this);
+			});
+
+		}
+		else if (data.drivers){
+			locations = Array(data.drivers.length);
+			for (count = 0; count < data.drivers.length; count++) {
+						lat = data.drivers[count].lat;
+						lng = data.drivers[count].lng;
+
+			}
+		}
+	}
 }
 
 
 	</script>
-	<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDHoxaiygdYABk5OHIZMOt-iizqXgrsdB8&callback=initMap"
+	<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDHoxaiygdYABk5OHIZMOt-iizqXgrsdB8&callback=initMap&libraries=geometry"
 	async defer> </script>
 	
 	<div id="infoWindow"></div>
