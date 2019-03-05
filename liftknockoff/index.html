@@ -76,9 +76,8 @@
 	function parsing(data){
 		var lat;
 		var lng;
-		console.log(data.passengers[0].username)
+		
 		if(data.passengers){
-			console.log(data.passengers[1].username)
 			console.log(data.passengers.length);
 			for (count = 0; count < data.passengers.length; count++) {
 				if (data.passengers[count].username == "WEINERMOBILE"){
@@ -91,7 +90,7 @@
 					icon: image = 'https://tuftsdev.github.io/WebProgramming/assignments/weinermobile.png'
 				});
 				marker.setMap(map);
-				}
+				} else {
 				lat = data.passengers[count].lat;
 				lng = data.passengers[count].lng;
 				person = new google.maps.LatLng(lat,lng);
@@ -101,19 +100,35 @@
 				icon: image = 'thinking_emoji.png'
 				});
 				marker.setMap(map);
+				}	
 			}
 		}
 		if(data.drivers){
-			for (count = 0; count < data.length; count++) {
-				//person = new google.maps.LatLng(lat,lng);
-				marker = new google.maps.Marker({
-				position: data[count].lat + data[count].lng,
-				title: data[count].username,
-				icon: image
+			console.log(data.drivers.length);
+			for (count = 0; count < data.drivers.length; count++) {
+				if (data.drivers[count].username == "WEINERMOBILE"){
+					lat = data.drivers[count].lat;
+					lng = data.drivers[count].lng;
+					person = new google.maps.LatLng(lat,lng);
+					marker = new google.maps.Marker({
+					position: person,
+					title: data.drivers[count].username,
+					icon: image = 'https://tuftsdev.github.io/WebProgramming/assignments/weinermobile.png'
 				});
 				marker.setMap(map);
+				} else {
+				lat = data.drivers[count].lat;
+				lng = data.drivers[count].lng;
+				person = new google.maps.LatLng(lat,lng);
+				marker = new google.maps.Marker({
+				position: person,
+				title: data.drivers[count].username,
+				icon: image = 'https://tuftsdev.github.io/WebProgramming/assignments/car.png'
+				});
+				marker.setMap(map);
+				}	
 			}
-	}
+		}
 }
 
 
