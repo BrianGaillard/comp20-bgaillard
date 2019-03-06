@@ -43,7 +43,7 @@
 		var shortest;
 		me = new google.maps.LatLng(myLat,myLng);
 		map.panTo(me);
-		
+
 		getData();
 	}
 
@@ -218,12 +218,69 @@
 
 		}
 		else if (data.drivers){
-			locations = Array(data.drivers.length);
+			var locations = [];
 			for (count = 0; count < data.drivers.length; count++) {
-						lat = data.drivers[count].lat;
-						lng = data.drivers[count].lng;
-
+				locations.push({
+					val: -99,
+					user: data.drivers[count].username
+				})
 			}
+
+			for (count = 0; count < data.drivers.length; count++) {
+				lati = data.drivers[count].lat;
+				long = data.drivers[count].lng;
+
+				me = new google.maps.LatLng(myLat,myLng);
+
+				other = new google.maps.LatLng(lati,long);
+
+				var value = google.maps.geometry.spherical.computeDistanceBetween(me, other);
+
+				locations[count].val = value;
+			}
+
+			var shortest = 19996000;
+			var shortest_w = 19996000;
+
+			for (i = 0; i < locations.length; i++) {
+				if (locations[i].val < shortest) {
+					shortest = locations[i].val;
+					close_user = locations[i].user;
+				}
+			}
+
+			shortest = shortest / 1609.344;
+			
+			for (i = 0; i < locations.length; i++) {
+				if (locations[i].val < shortest_w && locations[i].user == "WEINERMOBILE") {
+					shortest_w = locations[i].val;
+				}
+			}
+
+			shortest_w = shortest_w / 1609.344;
+
+			var weinertext = "The WEINERMOBILE is "+shortest_w+" miles away from me!";
+			if (shortest_w == 19996000){
+				weinertext = "Sorry! the WEINERMOBILE has phased out of existence!";
+			}
+
+
+			marker = new google.maps.Marker({
+			position: me,
+			title: "I am m4Phs9fb! The closest person is "+close_user+" and they are "+shortest+" miles away! "+weinertext,
+			icon: "elephant.png"
+			});
+
+			marker.setMap(map);
+
+			infoWindow = new google.maps.InfoWindow({
+				maxWidth: 400
+			});
+			google.maps.event.addListener(marker,'click',function() {
+			infoWindow.setContent(this.title);
+			infoWindow.open(map, this);
+			});
+
 		}
 	}
 }
