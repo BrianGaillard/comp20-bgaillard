@@ -43,18 +43,18 @@
 		var shortest;
 		me = new google.maps.LatLng(myLat,myLng);
 		map.panTo(me);
-		mymarker = new google.maps.Marker({
-			position: me,
-			title: "The closest person is "+shortest+" miles away!",
-			icon: image
-		});
-		mymarker.setMap(map);
+		// mymarker = new google.maps.Marker({
+		// 	position: me,
+		// 	title: "The closest person is "+shortest+" miles away!",
+		// 	icon: "elephant.png"
+		// });
+		// mymarker.setMap(map);
 
-		infoWindow = new google.maps.InfoWindow();
-		google.maps.event.addListener(mymarker,'click',function() {
-			infoWindow.setContent(this.title);
-			infoWindow.open(map, this);
-		});
+		// infoWindow = new google.maps.InfoWindow();
+		// google.maps.event.addListener(mymarker,'click',function() {
+		// 	infoWindow.setContent(this.title);
+		// 	infoWindow.open(map, this);
+		// });
 		getData();
 	}
 
@@ -164,34 +164,77 @@
 		var lati;
 		var long;
 		var locations;
-		shortest = 19996000;
+		var close_user = "Placeholder";
+		//locations = Array(data.passengers.length);
+		//locations = {}
+		//locations = [];
 		if (data.passengers){
-			locations = Array(data.passengers.length);
+			var locations = [];
+			for (count = 0; count < data.passengers.length; count++) {
+				locations.push({
+					val: -99,
+					user: data.passengers[count].username
+				})
+			}
+
+			//locations = Array(data.passengers.length);
 			for (count = 0; count < data.passengers.length; count++) {
 						lati = data.passengers[count].lat;
 						long = data.passengers[count].lng;
 						me = new google.maps.LatLng(myLat,myLng);
-						console.log("me"+me);
+						console.log("me "+me);
 						other = new google.maps.LatLng(lati,long);
-						console.log("other"+other);
+						console.log("other "+other);
 
-						value = google.maps.geometry.spherical.computeDistanceBetween(me, other);
-						locations[count] = value;
-						console.log("value"+value);
+						//var name = data.passengers[count].username;
+
+						var value = google.maps.geometry.spherical.computeDistanceBetween(me, other);
+
+						locations[count].val = value;
+						console.log("value "+locations[count].val);
+						console.log("username "+locations[count].user);
+						{
+
+						}
+
 			}
 
-			for (i = 1; i < data.passengers.length; i++) {
-				if (locations[i] < shortest) {
-					shortest = locations[i];
+			//keys = Object.keys(locations);
+
+			//console.log("value? : "+ keys[0]);
+			//console.log("name? : "+ locations[keys[0]]);
+			var shortest = 19996000;
+			//console.log("length "+ keys.length);
+
+		// 	for (i = 0; i < locations.length; i++) {
+		// 	console.log(keys[i] + " => " + locations[keys[i]]);
+		// }
+			var counting = 0;
+
+
+			for (i = 0; i < locations.length; i++) {
+				console.log("val : "+ locations[1].val);
+				if (locations[i].val < shortest) {
+					shortest = locations[i].val;
+					close_user = locations[i].user;
+					console.log("shortest - meters : "+ locations[i].val);
+					console.log("thedude : "+ locations[i].user);
+					console.log("new_shortest: "+ shortest);
 				}
+				counting++;
 			}
-			shortest = shortest * 0.000621371;
+
+			console.log("iterations "+counting);
+			shortest = shortest / 1609.344;
+			console.log("shortest distance: "+shortest);
+			console.log("name of short: "+close_user);
+			
 
 		
 			marker = new google.maps.Marker({
 			position: me,
-			title: "The closest person is "+shortest+" miles away!",
-			icon: image
+			title: "You are m4Phs9fb! The closest person is "+close_user+" and they are "+shortest+" miles away!",
+			icon: "elephant.png"
 			});
 
 			marker.setMap(map);
