@@ -50,13 +50,14 @@
 	function getData(){
 		request = new XMLHttpRequest();
 
-		request.open("POST", "https://hans-moleman.herokuapp.com/rides", true);
+		request.open("POST", "https://stormy-stream-66769.herokuapp.com/rides", true);
 
 		request.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
 
 		request.onreadystatechange = function(){
 			if (request.readyState == 4 && request.status == 200) {
 				data = JSON.parse(request.responseText);
+				console.log(data);
 				parsing(data);
 			}
 		}
@@ -107,15 +108,15 @@
 			}
 			shortestDistance(data);
 		}
-		if(data.drivers){
-			for (count = 0; count < data.drivers.length; count++) {
-				if (data.drivers[count].username == "WEINERMOBILE"){
-					lat = data.drivers[count].lat;
-					lng = data.drivers[count].lng;
+		if(data.vehicles){
+			for (count = 0; count < data.vehicles.length; count++) {
+				if (data.vehicles[count].username == "WEINERMOBILE"){
+					lat = data.vehicles[count].lat;
+					lng = data.vehicles[count].lng;
 					person = new google.maps.LatLng(lat,lng);
 					marker = new google.maps.Marker({
 					position: person,
-					title: "It's the "+data.drivers[count].username+"!! It is at latitude "+lat+" and longitude "+lng+"!",
+					title: "It's the "+data.vehicles[count].username+"!! It is at latitude "+lat+" and longitude "+lng+"!",
 					icon: image = 'https://tuftsdev.github.io/WebProgramming/assignments/weinermobile.png'
 				});
 				marker.setMap(map);
@@ -127,12 +128,12 @@
 				});
 
 				} else {
-				lat = data.drivers[count].lat;
-				lng = data.drivers[count].lng;
+				lat = data.vehicles[count].lat;
+				lng = data.vehicles[count].lng;
 				person = new google.maps.LatLng(lat,lng);
 				marker = new google.maps.Marker({
 				position: person,
-				title: "Driver "+data.drivers[count].username+" is at latitude "+lat+" and longitude "+lng+"!",
+				title: "Driver "+data.vehicles[count].username+" is at latitude "+lat+" and longitude "+lng+"!",
 				icon: image = 'https://tuftsdev.github.io/WebProgramming/assignments/car.png'
 				});
 				marker.setMap(map);
@@ -217,18 +218,20 @@
 			});
 
 		}
-		else if (data.drivers){
+		// This code will never execute???
+		// It will NOT go into this if statement even in requirements are met
+		if (data.vehicles) {
 			var locations = [];
-			for (count = 0; count < data.drivers.length; count++) {
+			for (count = 0; count < data.vehicles.length; count++) {
 				locations.push({
 					val: -99,
-					user: data.drivers[count].username
+					user: data.vehicles[count].username
 				})
 			}
 
-			for (count = 0; count < data.drivers.length; count++) {
-				lati = data.drivers[count].lat;
-				long = data.drivers[count].lng;
+			for (count = 0; count < data.vehicles.length; count++) {
+				lati = data.vehicles[count].lat;
+				long = data.vehicles[count].lng;
 
 				me = new google.maps.LatLng(myLat,myLng);
 
@@ -263,7 +266,6 @@
 			if (shortest_w == 19996000){
 				weinertext = "Sorry! the WEINERMOBILE has phased out of existence!";
 			}
-
 
 			marker = new google.maps.Marker({
 			position: me,
