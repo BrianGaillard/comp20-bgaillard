@@ -11,20 +11,52 @@
 
 		<h1>Assignment 4: Security</h1>
 		<p>Brian Gaillard 2019 </p>
-		<p>Web Programming</p>
+		<p>Web Programming - Ming Chow</p>
+		<p>Application - https://fathomless-fjord-27627.herokuapp.com/</p>
 
 		<h2>Introduction</h2>
 		<p>This application deals with the back-end of an app similar to Lyft or Uber. The app accesses databases for passengers and riders and relays the relevant information from either database based on the user.</p>
 		<P>This project is meant to identify at least 3 vulnerabilities in the code of thia application that leave it open to security attacks. Types of security vulnerabilies incude but are not limited to XSS and SQL injection.</P>
 		<h2>Methodology</h2>
+		<p>First, I plan to use curl commands to determine how the app works (what was impelented) and test how secure the app is. Various curl calls will be made with different inputs and values, including tests with values that may breach security. I will also experiment with various query strings and utilize XXS to exploit security vulnerabilities. Next, I will use ZAP to test the application to determine if there are any other vulnerabilities that I may have missed.</p>
 
 		<h2>Abstract of Findings</h2>
+		<p> 
+		 NoSQL Injection attacks code where inputs are not filtered. Using this, it is possible to obtain all user data from both passengers and drivers throught the use of the GET API passenger.json. Through this, a person would be able to impersonate other users easily as well as steal data. Cross Site Scripting is also a notable vunerability of this application. This security vulnerability allows malicious code to be executed at anyone's discretion. Popups and redirections can occur due to this vulnerability. Adding proper headers to the app would also protect it from attacks.
+		</p>
 
 		<h2>Issues Found</h2>
+		<h3>passenger.json API: NoSQL Injection</h3>
+		<p>In the passenger.json API, it is possible to return all passenger and driver data by modifying the query string in the URL. The severity of this issue is medium. Returning the credentials of every user could easily allow access to administrator accounts and data, but in this case it presents less of a threat given the information that is being inserted into the app. In general, he lack of security puts all users of the site and their information at risk.
+		This problem could be found while testing with various query strings with the passenger.json API.</p>
+		<p><img src="security_pic_2.png" alt="Example of NoSQL Injection: [$ne]" /></p>
+
+		<p>This problem can be taken care of if the input of the string is sanitized before use. You can use mongo-sanitize to make sure that keys starting with '$' are stripped.</p>
+
+		<h3>curl: Cross Site Scripting (XSS)</h3>
+		<p>In the root URL of the application, HTML displays all vehicles in decsending order. Using curl and exploiting the code's XSS vulnerability, it is possible to inject javascript into the application. The severity of this issue is also high because there are not many limits on what one can do when code is injected into a web app. Stealing cookies, popups, and redirections are only some of the things that are possible with XSS.
+		This problem was found after testing multiple curl --data inputs to attempt to inject code that would cause a popup to appear on the home page of the app.</p>
+		<p><img src="security_pic_1.png" alt="Example XXS: popup" /></p>
+
+		<p>This problem can be avoided by using a validator and sanitizing your code. Using a validator can help to stop code from being formatted or interpreted correctly. Users can also have the option of disabling client side scripts, as well as making all output from teh app encoded.</p>
+
+		<h3>ZAP: Header Not Set/Header Missing</h3>
+		<p>Using ZAP to determine if there are any other security vulnerabilites resulted in alerts regarding headers. A X-Frame-Options header was missing from the HTTP response. These types of errors are typically to protect against "clickjacking" attacks. "Clickjacking" is when hyperlinks are hidden under legit clickable content. An example of this can be seen on many movie pirating sites, where a button to watch the movie is presented, but a hyperlink redirects a user to a new destination, usually owned by another app or domain. Another problem stems from the X-Content-Type-Options header being missing. This means that the browser cant detect MIME types. If the browser can't detect MIME types, then potentially bad/banned content types/documents may be able to affect the user's computer.
+		These problems were found using ZAP.</p>
+
+		<p><img src="security_pic_3.png" alt="Example ZAP: Missing Headers" /></p>
+
+		<p>These probems can be avoided by including the relevant headers in the URL, possibly using XMLHTTP functions.</p>
 
 		<h2>Conclusion</h2>
+		<p>The application was well built but still had some fatal security flaws that could be addressed. One easy way to prevent the attacks that I performed would be to validate any user input that the app recieves. This way, there is no chance at injected code. Validating and sanitizing user input can be done fairly easily. A validator dependency and a few lines of code would solve this problem. The only real cost would be a little time. The addition of the proper headers to prevent incorrect MIME types and clickjacking should also be relatively easy to implement. Using .setRequestHeader from XMLHTTP and setting the proper header may fix this problem. Overall, the web application itself is solid, but the security was slightly lacking.</p>
 
 		<h2>References</h2>
+		<p>https://zanon.io/posts/nosql-injection-in-mongodb</p>
+		<p>https://www.veracode.com/security/xss</p>
+		<p>https://www.owasp.org/index.php/Clickjacking</p>
+		<p>https://developer.mozilla.org/en-US/docs/Web/Security/Securing_your_site/Configuring_server_MIME_types</p>
+
 
 	</body>
 </html>
